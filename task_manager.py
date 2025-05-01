@@ -1,13 +1,40 @@
 # =====importing libraries===========
-'''This is the section where you will import libraries'''
+import datetime
+# ====Functions====
+
+
+def read_users(file_name):
+    with open(file_name, "r") as file:
+        lines = file.readlines()
+    # Put usernames and passwords into a list of dictionaries.
+    users_out = []
+    for line in lines:
+        usr = line.split(', ')[0].strip("\n")
+        pwd = line.split(', ')[1].strip("\n")
+        users_out.append({"username": usr,
+                          "password": pwd})
+    return users_out
+
+
+def login(file_name):
+    # Read usernames and passwords
+    users = read_users(file_name)
+    print("Welcome\nPlease sign in")
+    while True:
+        username = input("Username: ")
+        password = input("Password: ")
+        if {"username": username, "password": password} in users:
+            break
+        elif user_exists(username, file_name):
+            print("Password incorrect.\nPlease try again.")
+        else:
+            print("Username not found.\nPlease try again.")
+    return username
+
 
 # ====Login Section====
-'''Here you will write code that will allow a user to login.
-    - Your code must read usernames and password from the user.txt file
-    - You can use a list or dictionary to store a list of usernames and
-    passwords from the file
-    - Use a while loop to validate your user name and password
-'''
+# Allow the user to log in.
+current_user = login("user.txt")
 
 while True:
     # Present the menu to the user and
