@@ -6,7 +6,7 @@ Command-line task manager application enabling users to create, store, and manag
 
 ## How to use
 
-- Run the python file and follow the poompts in the command line. 
+- Run the python file and follow the prompts in the command line. 
 - Log in using the admin username: admin and password: adm1n, or choose others from the user.txt file.
 - Create your own accound by chosing 'register user'.
 - Add tasks
