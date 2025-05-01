@@ -64,6 +64,32 @@ def user_exists(user_to_check, file_name):
     return user_found
 
 
+def add_task(file_name):
+    while True:
+        username = input("Please enter the username of the person to whom the "
+                         "task will be assigned: ")
+        if user_exists(username, "user.txt"):
+            break
+        else:
+            print("User does not exist.")
+            continue
+    title = input("Please enter the title of the task: ")
+    description = input("Please enter a description of the task: ")
+    date_assigned = datetime.datetime.now().date()
+    due_date = get_due_date(date_assigned)
+    completed = get_completion_status()
+    with open(file_name, "a") as file:
+        file.write(
+            f"\n{username}, {title}, {description}, "
+            f"{date_assigned.strftime("%d")} "
+            f"{date_assigned.strftime("%b")} "
+            f"{date_assigned.strftime("%Y")}, "
+            f"{due_date.strftime("%d")} "
+            f"{due_date.strftime("%b")} "
+            f"{due_date.strftime("%Y")}, "
+            f"{completed}")
+
+
 # ====Login Section====
 # Allow the user to log in.
 current_user = login("user.txt")
@@ -83,17 +109,7 @@ e - exit
         register_user("user.txt")
 
     elif menu == 'a':
-        pass
-        '''This code block will allow a user to add a new task to task.txt file
-        - You can use these steps:
-            - Prompt a user for the following: 
-                - the username of the person whom the task is assigned to,
-                - the title of the task,
-                - the description of the task, and 
-                - the due date of the task.
-            - Then, get the current date.
-            - Add the data to the file task.txt
-            - Remember to include 'No' to indicate that the task is not complete.'''
+        add_task("tasks.txt")
 
     elif menu == 'va':
         pass
