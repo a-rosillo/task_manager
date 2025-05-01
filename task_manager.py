@@ -31,7 +31,8 @@ def login(file_name):
             print("Username not found.\nPlease try again.")
     return username
 
-    def register_user(file_name):
+
+def register_user(file_name):
     print("Please enter the username and password")
     while True:
         username = input("Username: ")
@@ -90,52 +91,140 @@ def add_task(file_name):
             f"{completed}")
 
 
+def get_due_date(date_assigned):
+    while True:
+        try:
+            due_year = int(input(
+                "Please enter the year that the task is due: "))
+            if due_year <= 0:
+                raise ValueError("Value must be positive.")
+            due_month = int(input(
+                "Please enter the month that the task is due: "))
+            if due_month <= 0:
+                raise ValueError("Value must be positive.")
+            due_day = int(input(
+                "Please enter the day of the month that the "
+                "task is due: "))
+            if due_day <= 0:
+                raise ValueError("Value must be positive.")
+            due_date = datetime.datetime(due_year, due_month, due_day).date()
+            if due_date < date_assigned:
+                raise Exception("Due date cannot be before the current date.")
+        except ValueError as e:
+            print(e)
+            continue
+        except Exception as e:
+            print(e)
+            continue
+        break
+    return due_date
+
+
+def get_completion_status():
+    while True:
+        completed = input("Has the task been completed yet? Y/N: ").upper()
+        if completed == "Y":
+            completed = "Yes"
+            break
+        elif completed == "N":
+            completed = "No"
+            break
+        else:
+            print("Response not recognised.")
+    return completed
+
+
+def view_tasks(file_name, user=None):
+    with open(file_name, "r") as file:
+        lines = file.readlines()
+    for line in lines:
+        task = line.split(", ")
+        if user is None:
+            print_task(task)
+        elif user == task[0]:
+            print_task(task)
+
+
+def print_task(task):
+    print("__________________________________________________________\n")
+    print("{:20} {:20}".format(*["Task:", task[1]]))
+    print("{:20} {:20}".format(*["Assigned to:", task[0]]))
+    print("{:20} {:20}".format(*["Date assigned:", task[3]]))
+    print("{:20} {:20}".format(*["Due date:", task[4]]))
+    print("{:20} {:20}".format(*["Task complete?:", task[5].strip("\n")]))
+    print("Task description:\n " + task[2])
+    print("__________________________________________________________")
+
+
+def display_statistics():
+    with open("tasks.txt", "r") as file:
+        task_lines = file.readlines()
+    num_tasks = len(task_lines)
+    with open("user.txt", "r") as file:
+        user_lines = file.readlines()
+    num_users = len(user_lines)
+    print(f"There are a total of {num_tasks} tasks and {num_users} users.")
+
+
 # ====Login Section====
 # Allow the user to log in.
 current_user = login("user.txt")
 
-while True:
-    # Present the menu to the user and
-    # make sure that the user input is converted to lower case.
-    menu = input('''Select one of the following options:
-r - register a user
-a - add task
-va - view all tasks
-vm - view my tasks
-e - exit
-: ''').lower()
+if current_user == "admin":
+    while True:
+        # Present the menu to the user and
+        # insure that the user input is converted to lower case.
+        menu = input("Select one of the following options:\n"
+                     "r - register user\n"
+                     "a - add task\n"
+                     "va - view all tasks\n"
+                     "vm - view my tasks\n"
+                     "d - display statistics\n"
+                     "e - exit\n").lower()
 
-    if menu == 'r':
-        register_user("user.txt")
+        if menu == 'r':
+            register_user("user.txt")
 
-    elif menu == 'a':
-        add_task("tasks.txt")
+        elif menu == 'a':
+            add_task("tasks.txt")
 
-    elif menu == 'va':
-        pass
-        '''This code block will read the task from task.txt file and
-         print to the console in the format of Output 2 presented in the PDF
-         You can do it in this way:
-            - Read a line from the file.
-            - Split that line where there is comma and space.
-            - Then print the results in the format shown in the Output 2 in the PDF
-            - It is much easier to read a file using a for loop.'''
+        elif menu == 'va':
+            view_tasks("tasks.txt")
 
-    elif menu == 'vm':
-        pass
-        '''This code block will read the task from task.txt file and
-         print to the console in the format of Output 2 presented in the PDF
-         You can do it in this way:
-            - Read a line from the file
-            - Split the line where there is comma and space.
-            - Check if the username of the person logged in is the same as the 
-              username you have read from the file.
-            - If they are the same you print the task in the format of Output 2
-              shown in the PDF '''
+        elif menu == 'vm':
+            view_tasks("tasks.txt", current_user)
 
-    elif menu == 'e':
-        print('Goodbye!!!')
-        exit()
+        elif menu == 'd':
+            display_statistics()
 
-    else:
-        print("You have entered an invalid input. Please try again")
+        elif menu == 'e':
+            print('Goodbye!!!')
+            exit()
+
+        else:
+            print("You have entered an invalid input. Please try again")
+else:
+    while True:
+        # Present the menu to the user and
+        # insure that the user input is converted to lower case.
+        menu = input("Select one of the following options:\n"
+                     "a - add task\n"
+                     "va - view all tasks\n"
+                     "vm - view my tasks\n"
+                     "e - exit\n").lower()
+
+        if menu == 'a':
+            add_task("tasks.txt")
+
+        elif menu == 'va':
+            view_tasks("tasks.txt")
+
+        elif menu == 'vm':
+            view_tasks("tasks.txt", current_user)
+
+        elif menu == 'e':
+            print('Goodbye!!!')
+            exit()
+
+        else:
+            print("You have entered an invalid input. Please try again")
