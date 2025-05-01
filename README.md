@@ -1,0 +1,1 @@
+Command-line task manager application enabling users to create, store, and manage tasks.
