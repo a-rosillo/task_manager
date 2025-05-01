@@ -31,6 +31,38 @@ def login(file_name):
             print("Username not found.\nPlease try again.")
     return username
 
+    def register_user(file_name):
+    print("Please enter the username and password")
+    while True:
+        username = input("Username: ")
+        # Check whether username is already taken.
+        if user_exists(username, file_name):
+            print("An account already exists with this username\n"
+                  "Please choose another username.")
+            continue
+        else:
+            break
+    while True:
+        password_1 = input("Password: ")
+        password_2 = input("Confirm password: ")
+        if password_1 == password_2:
+            break
+        else:
+            print("Passwords do not match. \nPlease try again.")
+    with open(file_name, "a") as file:
+        file.write(f"\n{username}, {password_1}")
+    print("Password saved.")
+
+
+def user_exists(user_to_check, file_name):
+    existing_users = read_users(file_name)
+    user_found = False
+    for user in existing_users:
+        if user_to_check == user["username"]:
+            user_found = True
+            break
+    return user_found
+
 
 # ====Login Section====
 # Allow the user to log in.
@@ -48,15 +80,7 @@ e - exit
 : ''').lower()
 
     if menu == 'r':
-        pass
-        '''This code block will add a new user to the user.txt file
-        - You can use the following steps:
-            - Request input of a new username
-            - Request input of a new password
-            - Request input of password confirmation.
-            - Check if the new password and confirmed password are the same
-            - If they are the same, add them to the user.txt file,
-              otherwise present a relevant message'''
+        register_user("user.txt")
 
     elif menu == 'a':
         pass
